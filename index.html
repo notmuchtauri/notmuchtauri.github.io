@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NotmuchTauri - The Modern UNIX Mail Client</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4f46e5', // Indigo 600
+                        secondary: '#8b5cf6', // Purple 500
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-text {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(to right, #4f46e5, #8b5cf6);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased selection:bg-primary selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-2">
+                    <!-- Mail Icon -->
+                    <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <span class="font-bold text-xl tracking-tight">NotmuchTauri</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <select id="lang-switch" class="bg-gray-100 border-none text-sm rounded-md py-1 px-2 focus:ring-primary cursor-pointer outline-none">
+                        <option value="en">🇬🇧 EN</option>
+                        <option value="fr">🇫🇷 FR</option>
+                    </select>
+                    <a href="https://github.com/barais/notmuchtauri" target="_blank" class="text-gray-500 hover:text-gray-900 transition-colors">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
+        <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight mb-6">
+            <span data-i18n="hero_title_1">The UNIX Philosophy</span> <br/>
+            <span class="gradient-text" data-i18n="hero_title_2">meets Modern UI.</span>
+        </h1>
+        <p class="mt-4 text-xl text-gray-500 max-w-3xl mx-auto" data-i18n="hero_desc">
+            An experimental, blazing-fast email client coordinating the best open-source CLI tools under a modern Tauri & Vue.js interface. Powered by Agentic AI.
+        </p>
+        <div class="mt-10 flex justify-center gap-4">
+            <a href="https://github.com/barais/notmuchtauri/releases" target="_blank" class="px-8 py-3 bg-primary text-white font-semibold rounded-lg shadow-lg hover:bg-indigo-700 transition transform hover:-translate-y-1">
+                <span data-i18n="btn_download">Download Release</span>
+            </a>
+            <a href="https://github.com/barais/notmuchtauri" target="_blank" class="px-8 py-3 bg-white text-gray-900 font-semibold rounded-lg shadow-md border border-gray-200 hover:bg-gray-50 transition transform hover:-translate-y-1">
+                <span data-i18n="btn_github">View on GitHub</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Video Section (Commented out for now) -->
+    <!--
+    <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="aspect-w-16 aspect-h-9 rounded-2xl overflow-hidden shadow-2xl bg-gray-900">
+            <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full object-cover"></iframe>
+        </div>
+    </section>
+    -->
+
+    <!-- Pillars Section -->
+    <section class="py-20 bg-white border-y border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900" data-i18n="pillars_title">Standing on the Shoulders of Giants</h2>
+                <p class="mt-4 text-gray-500 max-w-2xl mx-auto" data-i18n="pillars_desc">
+                    Rather than reinventing the wheel and managing IMAP/SMTP protocols directly in Rust or JavaScript, NotmuchTauri acts as an orchestrator for four open-source pillars.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <!-- isync -->
+                <div class="p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                    <h3 class="text-xl font-bold text-primary mb-2">isync / mbsync</h3>
+                    <p class="text-gray-600" data-i18n="pillar_1">The sync engine. It reliably connects to your IMAP accounts and downloads your emails locally (Maildir format). This allows for a perfect offline-first experience.</p>
+                </div>
+                <!-- Notmuch -->
+                <div class="p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                    <h3 class="text-xl font-bold text-primary mb-2">Notmuch</h3>
+                    <p class="text-gray-600" data-i18n="pillar_2">The core reactor. A mail indexer and search engine based on Xapian. Stop wasting time sorting emails into folders: archive everything and find any message among hundreds of thousands in milliseconds using queries and tags.</p>
+                </div>
+                <!-- msmtp -->
+                <div class="p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                    <h3 class="text-xl font-bold text-primary mb-2">msmtp</h3>
+                    <p class="text-gray-600" data-i18n="pillar_3">A minimalist and highly efficient SMTP client. When NotmuchTauri needs to send an email, it generates the message and pipes it directly to msmtp for dispatch.</p>
+                </div>
+                <!-- LanguageTool -->
+                <div class="p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                    <h3 class="text-xl font-bold text-primary mb-2">LanguageTool</h3>
+                    <p class="text-gray-600" data-i18n="pillar_4">A powerful open-source grammar and spell checker. Running locally, it analyzes your drafts and suggests corrections without your data ever leaking to third-party servers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Agentic & Claude Code Section -->
+    <section class="py-20 bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-3xl font-bold mb-4" data-i18n="claude_title">Coding with Agentic AI: The Claude Code Experience</h2>
+                <p class="text-gray-300 mb-6 leading-relaxed" data-i18n="claude_desc_1">
+                    One of the most fun aspects of this project was the development approach. To refine the specs and structure complex Vue.js components (like recursive reply trees or placing overlays on text), I experimented with direct exchanges with Claude.
+                </p>
+                <p class="text-gray-300 mb-6 leading-relaxed" data-i18n="claude_desc_2">
+                    This "Specification-Driven Development" approach assisted by AI proved to be incredibly effective.
+                </p>
+                <a href="https://jeremielitzler.fr/post/2026-03/developpement-par-specifications-avec-claude-code/?utm_medium=social&utm_source=Medium" target="_blank" class="inline-flex items-center text-secondary hover:text-white transition-colors font-semibold">
+                    <span data-i18n="claude_link">👉 Read Jeremie Litzler's great article on the subject</span>
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                </a>
+            </div>
+            <div class="bg-gray-800 p-8 rounded-2xl border border-gray-700 shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-10">
+                    <svg class="w-24 h-24 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-white" data-i18n="copilot_title">RagaRennes: AI directly in your inbox</h3>
+                <p class="text-gray-400 mb-4" data-i18n="copilot_intro">
+                    As a computer scientist in 2026, I couldn't build a mail client without integrating AI to save time! I embedded RagaRennes (or any OpenAI-compatible API) as a collapsible side copilot.
+                </p>
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-secondary mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span class="text-gray-300"><strong class="text-white" data-i18n="copilot_f1_bold">Summarize endless threads:</strong> <span data-i18n="copilot_f1_text">The UI converts complex HTML threads into structured plain text and sends it to the AI for a quick synthesis of the exchange.</span></span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-secondary mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span class="text-gray-300"><strong class="text-white" data-i18n="copilot_f2_bold">Draft replies:</strong> <span data-i18n="copilot_f2_text">Give it a few keywords ("Tell him the quote is validated and we start Monday"), and the AI generates the formatted Markdown text. One click injects it cleanly into the Tiptap editor.</span></span>
+                    </li>
+                </ul>
+                <p class="mt-6 text-sm text-gray-500 italic" data-i18n="copilot_joke">(You can probably guess how this text was written 😉)</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Productivity Features -->
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-bold text-gray-900 mb-12" data-i18n="prod_title">Built for Productivity</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2" data-i18n="prod_1_title">Task Conversion</h3>
+                    <p class="text-gray-600 text-sm" data-i18n="prod_1_desc">Convert emails into actionable tasks directly synced with Remember The Milk.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                    <div class="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2" data-i18n="prod_2_title">iCalendar Generation</h3>
+                    <p class="text-gray-600 text-sm" data-i18n="prod_2_desc">Easily generate and send .ics meeting invitations based on email threads.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                    <div class="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2" data-i18n="prod_3_title">Auto-completion Shortcuts</h3>
+                    <p class="text-gray-600 text-sm" data-i18n="prod_3_desc">Define text snippets and trigger them instantly with Ctrl+Space while typing.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / CTA -->
+    <footer class="bg-white border-t border-gray-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-2xl font-bold mb-4" data-i18n="footer_title">Want to give it a try?</h2>
+            <p class="text-gray-500 mb-8" data-i18n="footer_desc">It's experimental, open-source, and made to be hacked. Feel free to test it, read the code, or submit PRs!</p>
+            <div class="flex justify-center gap-4">
+                <a href="https://github.com/barais/notmuchtauri" target="_blank" class="px-6 py-2 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 transition">
+                    GitHub Repository
+                </a>
+            </div>
+            <p class="mt-8 text-sm text-gray-400">© 2026 NotmuchTauri. Open Source under MIT License.</p>
+        </div>
+    </footer>
+
+    <!-- i18n Script -->
+    <script>
+        const translations = {
+            en: {
+                hero_title_1: "The UNIX Philosophy",
+                hero_title_2: "meets Modern UI.",
+                hero_desc: "An experimental, blazing-fast email client coordinating the best open-source CLI tools under a modern Tauri & Vue.js interface. Powered by Agentic AI.",
+                btn_download: "Download Release",
+                btn_github: "View on GitHub",
+                pillars_title: "Standing on the Shoulders of Giants",
+                pillars_desc: "Rather than reinventing the wheel and managing IMAP/SMTP protocols directly in Rust or JavaScript, NotmuchTauri acts as an orchestrator for four open-source pillars.",
+                pillar_1: "The sync engine. It reliably connects to your IMAP accounts and downloads your emails locally (Maildir format). This allows for a perfect offline-first experience.",
+                pillar_2: "The core reactor. A mail indexer and search engine based on Xapian. Stop wasting time sorting emails into folders: archive everything and find any message among hundreds of thousands in milliseconds using queries and tags.",
+                pillar_3: "A minimalist and highly efficient SMTP client. When NotmuchTauri needs to send an email, it generates the message and pipes it directly to msmtp for dispatch.",
+                pillar_4: "A powerful open-source grammar and spell checker. Running locally, it analyzes your drafts and suggests corrections without your data ever leaking to third-party servers.",
+                claude_title: "Coding with Agentic AI: The Claude Code Experience",
+                claude_desc_1: "One of the most fun aspects of this project was the development approach. To refine the specs and structure complex Vue.js components (like recursive reply trees or placing overlays on text), I experimented with direct exchanges with Claude.",
+                claude_desc_2: "This \"Specification-Driven Development\" approach assisted by AI proved to be incredibly effective.",
+                claude_link: "👉 Read Jeremie Litzler's great article on the subject",
+                copilot_title: "RagaRennes: AI directly in your inbox",
+                copilot_intro: "As a computer scientist, I couldn't build a mail client without integrating AI to save time! I embedded RagaRennes (or any OpenAI-compatible API) as a collapsible side copilot.",
+                copilot_f1_bold: "Summarize endless threads:",
+                copilot_f1_text: "The UI converts complex HTML threads into structured plain text and sends it to the AI for a quick synthesis of the exchange.",
+                copilot_f2_bold: "Draft replies:",
+                copilot_f2_text: "Give it a few keywords (\"Tell him the quote is validated and we start Monday\"), and the AI generates the formatted Markdown text. One click injects it cleanly into the Tiptap editor.",
+                copilot_joke: "(You can probably guess how this text was written 😉)",
+                prod_title: "Built for Productivity",
+                prod_1_title: "Task Conversion",
+                prod_1_desc: "Convert emails into actionable tasks directly synced with Remember The Milk.",
+                prod_2_title: "iCalendar Generation",
+                prod_2_desc: "Easily generate and send .ics meeting invitations based on email threads.",
+                prod_3_title: "Auto-completion Shortcuts",
+                prod_3_desc: "Define text snippets and trigger them instantly with Ctrl+Space while typing.",
+                footer_title: "Want to give it a try?",
+                footer_desc: "It's experimental, open-source, and made to be hacked. Feel free to test it, read the code, or submit PRs!"
+            },
+            fr: {
+                hero_title_1: "La philosophie UNIX",
+                hero_title_2: "rencontre les interfaces modernes.",
+                hero_desc: "Un client mail expérimental ultra-rapide qui coordonne les meilleurs outils CLI open source sous une interface moderne Tauri & Vue.js. Dopé à l'IA Agentique.",
+                btn_download: "Télécharger (Release)",
+                btn_github: "Voir sur GitHub",
+                pillars_title: "Sur les épaules de géants",
+                pillars_desc: "Plutôt que de réinventer la roue et de devoir gérer les protocoles IMAP et SMTP directement en Rust ou JS, NotmuchTauri délègue la gestion des flux à des pointures du monde open source.",
+                pillar_1: "C'est le moteur de synchronisation. Il se connecte de manière fiable à vos comptes IMAP et télécharge vos e-mails localement. C'est lui qui permet d'avoir une application qui fonctionne parfaitement hors-ligne.",
+                pillar_2: "Le cœur du réacteur. Au lieu de classer fastidieusement vos e-mails dans des dossiers, Notmuch vous permet de tout archiver et de retrouver n'importe quel message en une fraction de seconde grâce aux tags.",
+                pillar_3: "Un client SMTP minimaliste et extrêmement efficace. Quand NotmuchTauri doit envoyer un e-mail, il génère le message et le passe directement à msmtp pour l'expédition.",
+                pillar_4: "Un correcteur grammatical et orthographique open source puissant. En le faisant tourner en local, il analyse le texte rédigé et remonte les suggestions sans que vos données ne fuitent.",
+                claude_title: "Coder avec l'IA agentique : L'expérience Claude Code",
+                claude_desc_1: "L'un des aspects les plus marrants de ce projet a été l'approche de développement. Pour affiner les specs et structurer les composants Vue.js complexes, j'ai expérimenté l'échange direct avec Claude.",
+                claude_desc_2: "Cette démarche de \"développement par spécifications\" assisté par IA s'avère redoutablement efficace.",
+                claude_link: "👉 L'excellent article de Jérémie Litzler sur le sujet",
+                copilot_title: "RagaRennes : L'IA directement dans la boîte",
+                copilot_intro: "En bon informaticien, je ne pouvais pas construire un client mail en 2026 sans y intégrer de l'intelligence artificielle ! J'ai donc intégré RagaRennes sous la forme d'un copilote latéral rétractable.",
+                copilot_f1_bold: "Résumer des threads interminables :",
+                copilot_f1_text: "L'interface convertit les threads HTML en texte brut structuré et l'envoie à l'IA pour obtenir une synthèse rapide de l'échange.",
+                copilot_f2_bold: "Rédiger des réponses :",
+                copilot_f2_text: "Donnez-lui quelques mots-clés (\"Dis-lui que le devis est validé\"), et l'IA génère le texte en Markdown. Un clic permet de l'injecter proprement dans l'éditeur.",
+                copilot_joke: "(Vous imaginez bien comment ce texte a été rédigé 😉)",
+                prod_title: "Pensé pour la productivité",
+                prod_1_title: "Conversion en Tâches",
+                prod_1_desc: "Convertissez vos e-mails en tâches directement synchronisées avec Remember The Milk.",
+                prod_2_title: "Génération iCalendar",
+                prod_2_desc: "Générez et envoyez facilement des invitations de réunion .ics depuis vos e-mails.",
+                prod_3_title: "Raccourcis d'auto-complétion",
+                prod_3_desc: "Définissez des extraits de texte et déclenchez-les instantanément avec Ctrl+Espace en tapant.",
+                footer_title: "Envie d'essayer ?",
+                footer_desc: "C'est expérimental, c'est open source, et c'est fait pour être bidouillé. N'hésitez pas à venir tester, lire le code ou proposer des PR !"
+            }
+        };
+
+        const langSwitch = document.getElementById('lang-switch');
+
+        function setLanguage(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    // Maintient le format HTML (comme les <strong>)
+                    el.innerHTML = translations[lang][key]; 
+                }
+            });
+            document.documentElement.lang = lang;
+        }
+
+        langSwitch.addEventListener('change', (e) => {
+            setLanguage(e.target.value);
+        });
+
+        // Initialize with default language (English)
+        setLanguage('en');
+    </script>
+</body>
+</html>
