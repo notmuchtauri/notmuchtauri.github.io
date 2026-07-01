@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notmuch Tauri - Installation & Guide</title>
+        <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4f46e5', // Indigo 600
+                        secondary: '#8b5cf6', // Purple 500
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-text {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(to right, #4f46e5, #8b5cf6);
+        }
+    </style>
+    <style>
+        /* --- Partie 1 : CSS Complet (Thème, Sombre/Clair, Layout) --- */
+        :root {
+            /* Palette Claire */
+            --bg-color: #f8fafc;
+            --text-color: #0f172a;
+            --text-muted: #475569;
+            --primary-color: #0ea5e9;
+            --primary-hover: #0284c7;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --nav-bg: rgba(255, 255, 255, 0.9);
+            
+            /* Couleurs Code */
+            --code-bg: #1e293b;
+            --code-text: #e2e8f0;
+            
+            /* Encadrés (Callouts) */
+            --info-bg: #f0f9ff;
+            --info-border: #38bdf8;
+            --tip-bg: #f0fdf4;
+            --tip-border: #4ade80;
+            --warn-bg: #fffbeb;
+            --warn-border: #facc15;
+            
+            /* Badges */
+            --badge-req-bg: #fee2e2; --badge-req-text: #991b1b;
+            --badge-rec-bg: #dcfce3; --badge-rec-text: #166534;
+            --badge-opt-bg: #f1f5f9; --badge-opt-text: #334155;
+        }
+
+        /* 🌙 Mode sombre automatique */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0f172a;
+                --text-color: #f8fafc;
+                --text-muted: #cbd5e1;
+                --primary-color: #38bdf8;
+                --primary-hover: #7dd3fc;
+                --card-bg: #1e293b;
+                --border-color: #334155;
+                --nav-bg: rgba(15, 23, 42, 0.9);
+                
+                --code-bg: #0b1120;
+                --code-text: #f8fafc;
+                
+                --info-bg: rgba(56, 189, 248, 0.1);
+                --tip-bg: rgba(74, 222, 128, 0.1);
+                --warn-bg: rgba(250, 204, 21, 0.1);
+                
+                --badge-req-bg: #7f1d1d; --badge-req-text: #fca5a5;
+                --badge-rec-bg: #14532d; --badge-rec-text: #86efac;
+                --badge-opt-bg: #334155; --badge-opt-text: #cbd5e1;
+            }
+        }
+
+        /* Reset & Typographie */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg-color); color: var(--text-color); line-height: 1.6; scroll-behavior: smooth; }
+        a { color: var(--primary-color); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        p { margin-bottom: 1rem; color: var(--text-muted); }
+        h1, h2, h3, h4 { margin: 2rem 0 1rem 0; font-weight: 600; color: var(--text-color); scroll-margin-top: 80px; }
+
+        /* Navigation & Hero */
+        header { position: sticky; top: 0; background: var(--nav-bg); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); padding: 1rem 2rem; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 700; color: var(--text-color); display: flex; align-items: center; gap: 0.5rem; }
+        .logo:hover { text-decoration: none; }
+        
+        .header-nav { display: flex; gap: 1.5rem; align-items: center; }
+        .lang-btn { background: transparent; border: 1px solid var(--border-color); color: var(--text-color); padding: 0.3rem 0.8rem; border-radius: 0.25rem; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+        .lang-btn:hover { background: var(--border-color); }
+
+        .hero { text-align: center; padding: 4rem 1rem; background: linear-gradient(180deg, var(--card-bg) 0%, var(--bg-color) 100%); border-bottom: 1px solid var(--border-color); }
+        .hero h1 { font-size: 2.5rem; margin-top: 0; }
+        
+        /* Layout Principal */
+        .container { display: flex; max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; gap: 3rem; }
+        aside { flex: 0 0 250px; position: sticky; top: 80px; height: calc(100vh - 80px); overflow-y: auto; padding-right: 1rem; }
+        main { flex: 1; min-width: 0; padding-bottom: 4rem; }
+
+        /* Menu Latéral */
+        .toc h3 { margin-top: 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-color); }
+        .toc-link { display: block; padding: 0.5rem 0; color: var(--text-muted); border-left: 2px solid transparent; padding-left: 1rem; transition: all 0.2s; }
+        .toc-link:hover { border-left-color: var(--primary-color); color: var(--primary-color); text-decoration: none; }
+
+        /* Cartes (Cards) */
+        .card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); transition: transform 0.2s; }
+        .card:hover { transform: translateY(-2px); }
+        .card ul { margin-left: 1.5rem; color: var(--text-muted); }
+        .card li { margin-bottom: 0.5rem; }
+        
+        /* Badges */
+        .badge { display: inline-flex; align-items: center; padding: 0.2rem 0.6rem; font-size: 0.75rem; font-weight: 700; border-radius: 9999px; margin-left: 0.5rem; vertical-align: middle; }
+        .badge.req { background: var(--badge-req-bg); color: var(--badge-req-text); }
+        .badge.rec { background: var(--badge-rec-bg); color: var(--badge-rec-text); }
+        .badge.opt { background: var(--badge-opt-bg); color: var(--badge-opt-text); }
+
+        /* Encadrés (Callouts) */
+        .callout { padding: 1rem; border-left: 4px solid; border-radius: 0.25rem; margin-bottom: 1.5rem; }
+        .callout p { margin: 0; color: inherit; }
+        .callout.info { background: var(--info-bg); border-color: var(--info-border); color: var(--text-color); }
+        .callout.tip { background: var(--tip-bg); border-color: var(--tip-border); color: var(--text-color); }
+        .callout.warning { background: var(--warn-bg); border-color: var(--warn-border); color: var(--text-color); }
+
+        /* Blocs de Code & Bouton Copy */
+        .code-container { position: relative; margin-bottom: 1.5rem; }
+        pre { background: var(--code-bg); color: var(--code-text); padding: 1.25rem; border-radius: 0.5rem; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.9em; border: 1px solid var(--border-color); }
+        .copy-btn { position: absolute; top: 0.5rem; right: 0.5rem; background: rgba(255,255,255,0.1); color: var(--code-text); border: 1px solid rgba(255,255,255,0.2); border-radius: 0.25rem; padding: 0.3rem 0.6rem; cursor: pointer; font-size: 0.75rem; transition: all 0.2s; backdrop-filter: blur(4px); }
+        .copy-btn:hover { background: rgba(255,255,255,0.2); }
+
+        /* Schéma d'Architecture */
+        .diagram { text-align: center; margin-bottom: 1.5rem; }
+        .diagram pre { background: transparent; color: var(--primary-color); border: 2px dashed var(--border-color); display: inline-block; font-weight: bold; text-align: left; }
+
+        /* Tableau JSON */
+        table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: 0.95rem; }
+        th, td { border: 1px solid var(--border-color); padding: 0.75rem; text-align: left; }
+        th { background: var(--card-bg); color: var(--text-color); }
+        td { color: var(--text-muted); }
+        td code { background: var(--bg-color); padding: 0.2rem 0.4rem; border-radius: 0.25rem; font-family: monospace; border: 1px solid var(--border-color); }
+
+        /* Workflow */
+        .workflow-step { display: flex; flex-direction: column; align-items: center; margin: 1rem 0; font-weight: bold; }
+        .workflow-arrow { color: var(--primary-color); font-size: 1.5rem; margin: 0.5rem 0; }
+
+        /* FAQ */
+        details { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 1rem; margin-bottom: 1rem; }
+        summary { font-weight: 600; cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; }
+        summary::-webkit-details-marker { display: none; }
+        summary::after { content: '+'; font-size: 1.25rem; color: var(--primary-color); }
+        details[open] summary::after { content: '-'; }
+        details p { margin-top: 1rem; margin-bottom: 0; }
+
+        /* Bouton Retour en haut */
+        #backToTop { position: fixed; bottom: 2rem; right: 2rem; background: var(--primary-color); color: white; width: 3rem; height: 3rem; border-radius: 50%; display: flex; justify-content: center; align-items: center; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); opacity: 0; pointer-events: none; transition: opacity 0.3s; font-size: 1.2rem; z-index: 50; border: none; cursor: pointer; }
+        #backToTop.visible { opacity: 1; pointer-events: auto; }
+        #backToTop:hover { background: var(--primary-hover); }
+
+        /* Footer */
+        footer { text-align: center; padding: 2rem; border-top: 1px solid var(--border-color); margin-top: 3rem; color: var(--text-muted); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { flex-direction: column; gap: 1rem; padding: 1rem; }
+            aside { position: static; height: auto; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; }
+            .hero h1 { font-size: 2rem; }
+        }
+
+        /* --- I18N CSS (Gestion Bilingue) --- */
+        body.lang-en .fr { display: none !important; }
+        body.lang-fr .en { display: none !important; }
+    </style>
+</head>
+<body class="lang-en"> <!-- Default EN -->
+
+    <!-- Header -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-2">
+                    <!-- Mail Icon -->
+                    <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <span class="font-bold text-xl tracking-tight">NotmuchTauri</span>
+                </div>
+                <div class="flex items-center space-x-4 sm:space-x-6">
+                    <!-- Lien vers install.html -->
+                    <a href="index.html" class="hidden sm:block text-sm font-semibold text-gray-600 hover:text-primary transition-colors" data-i18n="nav_install">
+                        Main page
+                    </a>
+                    
+                    <select id="lang-switch" class="bg-gray-100 border-none text-sm rounded-md py-1 px-2 focus:ring-primary cursor-pointer outline-none">
+                        <option value="en">🇬🇧 EN</option>
+                        <option value="fr">🇫🇷 FR</option>
+                    </select>
+                    <a href="https://github.com/notmuchtauri/notmuchtauri" target="_blank" class="text-gray-500 hover:text-gray-900 transition-colors">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+<!--    <header>
+
+
+        <a href="#" class="logo">📧 Notmuch Tauri</a>
+        <nav class="header-nav">
+            <a href="https://github.com/notmuchtauri/notmuchtauri" target="_blank">GitHub</a>
+            <button id="langToggle" class="lang-btn">🌐 FR</button>
+        </nav>
+    </header>-->
+
+    <!-- Hero -->
+    <div class="hero">
+        <h1>Installation & Documentation</h1>
+        <p class="en">The complete guide to configuring your modern, AI-powered email environment.</p>
+        <p class="fr">Le guide complet pour configurer votre environnement e-mail moderne et propulsé par l'IA.</p>
+    </div>
+
+    <!-- Main Container (Sidebar + Content) -->
+    <div class="container">
+        
+        <!-- Sidebar / Sommaire -->
+        <aside class="toc">
+            <h3>
+                <span class="en">📌 Table of Contents</span>
+                <span class="fr">📌 Sommaire</span>
+            </h3>
+            <a href="#architecture" class="toc-link">1. Architecture</a>
+            <a href="#installation" class="toc-link">2. Installation</a>
+            <a href="#configuration" class="toc-link">3. Configuration</a>
+            <a href="#languagetool" class="toc-link">4. LanguageTool</a>
+            <a href="#config-json" class="toc-link">
+                <span class="en">5. config.json File</span>
+                <span class="fr">5. Fichier config.json</span>
+            </a>
+            <a href="#workflow" class="toc-link">6. Workflow & Quick Start</a>
+            <a href="#faq" class="toc-link">7. FAQ</a>
+        </aside>
+
+        <!-- Contenu Principal -->
+        <main>
+
+            <!-- Partie 2 — Architecture -->
+            <section id="architecture">
+                <h2>Architecture 🟦</h2>
+                <p class="en">Notmuch Tauri acts as the modern graphical interface (GUI) orchestrating a set of specialized, robust, and proven UNIX CLI tools. Here is how the components interact:</p>
+                <p class="fr">Notmuch Tauri agit comme l'interface moderne (GUI) qui orchestre un ensemble d'outils CLI UNIX spécialisés, robustes et éprouvés. Voici comment les composants interagissent :</p>
+                
+                <div class="diagram">
+<pre>
+           IMAP Server
+                │
+            mbsync
+                │
+             Maildir
+        ┌──────┼────────┐
+        │      │        │
+    notmuch  afew   Tauri
+                      │
+        ┌─────────────┴─────────────┐
+        │                           │
+   LanguageTool                   msmtp
+        │                           |
+        ▼                          ▼ 
+       LLM                          SMTP Server
+</pre>
+                </div>
+                
+                <div class="card">
+                    <ul class="en">
+                        <li><strong>mbsync:</strong> Downloads your emails from the IMAP server to a local Maildir format.</li>
+                        <li><strong>notmuch:</strong> Instantly indexes your Maildir for ultra-fast searching.</li>
+                        <li><strong>afew:</strong> Automatically applies tags (inbox, spam, lists) to your new emails.</li>
+                        <li><strong>msmtp:</strong> Reliably sends your emails via SMTP.</li>
+                        <li><strong>Tauri:</strong> The lightweight and fast graphical interface you use daily.</li>
+                        <li><strong>LanguageTool / LLM:</strong> Your AI assistants for proofreading and writing.</li>
+                    </ul>
+                    <ul class="fr">
+                        <li><strong>mbsync :</strong> Télécharge vos e-mails depuis le serveur IMAP vers un format Maildir local.</li>
+                        <li><strong>notmuch :</strong> Indexe instantanément votre Maildir pour une recherche ultra-rapide.</li>
+                        <li><strong>afew :</strong> Applique automatiquement des tags (inbox, spam, listes) à vos nouveaux e-mails.</li>
+                        <li><strong>msmtp :</strong> Envoie vos e-mails (SMTP) de manière fiable.</li>
+                        <li><strong>Tauri :</strong> L'interface graphique légère et rapide que vous utilisez au quotidien.</li>
+                        <li><strong>LanguageTool / LLM :</strong> Vos assistants pour la correction et la rédaction (IA).</li>
+                    </ul>
+                </div>
+            </section>
+
+            <hr style="border-top: 1px solid var(--border-color); margin: 2rem 0; border-bottom: none;">
+
+            <!-- Partie 3 — Installation -->
+            <section id="installation">
+                <h2>Installation 📦</h2>
+                <p class="en">Before using Notmuch Tauri, you must install the underlying tools on your system.</p>
+                <p class="fr">Avant d'utiliser Notmuch Tauri, vous devez installer les outils sous-jacents sur votre système.</p>
+                
+                <div class="callout tip">
+                    <p class="en">💡 <strong>Tip:</strong> Most of these tools are already available in your distribution's official repositories.</p>
+                    <p class="fr">💡 <strong>Astuce :</strong> La plupart de ces outils sont déjà disponibles dans les dépôts officiels de votre distribution.</p>
+                </div>
+
+                <h3 class="en">Global installation</h3>
+                <h3 class="fr">Installation globale</h3>
+                <div class="code-container">
+                    <pre><code># Debian / Ubuntu
+sudo apt install isync notmuch afew msmtp notmuch-addrlookup gnupg2 ca-certificates parallel
+
+# Fedora / RHEL
+sudo dnf install isync notmuch afew msmtp notmuch-addrlookup gnupg2 ca-certificates parallel
+
+# macOS (Homebrew)
+brew install isync notmuch afew msmtp notmuch-addrlookup gnupg2 ca-certificates parallel</code></pre>
+                </div>
+
+                <h3 class="en">Component details</h3>
+                <h3 class="fr">Détail des composants</h3>
+                
+                <div class="card" id="mbsync">
+                    <h4>mbsync (isync) 
+                        <span class="badge req en">Required</span>
+                        <span class="badge req fr">Requis</span>
+                    </h4>
+                    <p class="en">The fastest IMAP synchronization tool. The package is often called <code>isync</code> but the command is <code>mbsync</code>.</p>
+                    <p class="fr">L'outil de synchronisation IMAP le plus rapide. Le paquet s'appelle souvent <code>isync</code> mais la commande est <code>mbsync</code>.</p>
+                </div>
+
+                <div class="card" id="notmuch">
+                    <h4>notmuch 
+                        <span class="badge req en">Required</span>
+                        <span class="badge req fr">Requis</span>
+                    </h4>
+                    <p class="en">The core of the system. An incredibly fast and extensible tag-based email search engine.</p>
+                    <p class="fr">Le cœur du système. Un moteur de recherche d'e-mails incroyablement rapide et extensible basé sur des tags.</p>
+                </div>
+
+                <div class="card" id="afew">
+                    <h4>afew 
+                        <span class="badge rec en">Recommended</span>
+                        <span class="badge rec fr">Recommandé</span>
+                    </h4>
+                    <p class="en">A Python script that integrates with notmuch to automatically tag your emails upon receipt.</p>
+                    <p class="fr">Un script Python qui s'intègre à notmuch pour taguer automatiquement vos e-mails lors de la réception.</p>
+                </div>
+
+                <div class="card" id="msmtp">
+                    <h4>msmtp 
+                        <span class="badge req en">Required</span>
+                        <span class="badge req fr">Requis</span>
+                    </h4>
+                    <p class="en">A very simple and lightweight SMTP client for sending your replies and new messages.</p>
+                    <p class="fr">Un client SMTP très simple et léger pour envoyer vos réponses et nouveaux messages.</p>
+                </div>
+            </section>
+
+            <!-- Partie 4 — Configuration -->
+            <section id="configuration">
+                <h2>Configuration ⚙️</h2>
+                <p class="en">This is where the magic happens. Configure each tool so it communicates properly with your email account.</p>
+                <p class="fr">C'est ici que la magie opère. Configurez chaque outil pour qu'il communique avec votre compte e-mail.</p>
+                
+                <h3 class="en">1. Password backup</h3>
+                <h3 class="fr">1. Sauvegarde du mot de passe</h3>
+                
+                <div class="code-container en">
+<pre><code># Securely backup your password
+echo -e "your_password" | gpg2 --symmetric -o ~/mail/gmail.gpg
+</code></pre>
+                </div>
+                <div class="code-container fr">
+<pre><code># Sauvegarde de votre mot de passe de manière sécurisée
+echo -e "your_password" | gpg2 --symmetric -o ~/mail/gmail.gpg
+</code></pre>
+                </div>
+
+                <h3 class="en">2. Certificate retrieval</h3>
+                <h3 class="fr">2. Récupération du certificat</h3>
+                
+                <div class="code-container en">
+<pre><code># Retrieve certificates
+mbsync-get-cert  imap.gmail.com  >  /home/barais/mail/gmail.pem
+</code></pre>
+                </div>
+                <div class="code-container fr">
+<pre><code># Récupération des certificats
+mbsync-get-cert  imap.gmail.com  >  /home/barais/mail/gmail.pem
+</code></pre>
+                </div>
+
+                <h3 class="en">3. ~/.mbsyncrc (Sync tool configuration)</h3>
+                <h3 class="fr">3. ~/.mbsyncrc (Configuration de l'outil de synchronisation)</h3>
+                <div class="code-container">
+<pre><code>IMAPAccount gmail
+Host imap.gmail.com
+User olivier.barais@gmail.com
+PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/mail/gmail.gpg"
+SSLType IMAPS
+CertificateFile /home/barais/mail/gmail.pem
+
+IMAPStore gmail-remote
+Account gmail
+
+MaildirStore gmail-local
+Path /home/barais/mail/gmail/
+Inbox /home/barais/mail/gmail/INBOX
+Flatten .
+
+Channel gmail
+Far :gmail-remote:
+Near :gmail-local:
+# Exclude everything under the internal [Gmail] folder, except the interesting folders
+Patterns * ![Gmail]* !&AOA-faire !Brouillons !Corbeille !Drafts !Envoy&AOk- !Mai
+lspring !Mailspring/Snoozed !Paiement !STAMP !Trash !Unwanted !assuracing !backu
+p !helloasso !jamespot !jhipster !olivierbaraisfree
+Create Both
+SyncState *
+CopyArrivalDate yes
+Sync All
+</code></pre>
+                </div>
+
+                <h3 class="en">4. ~/.config/msmtp/config (Mail sending tool configuration)</h3>
+                <h3 class="fr">4. ~/.config/msmtp/config (Configuration de l'outil pour l'envoi de mail)</h3>
+                <div class="code-container en">
+<pre><code>defaults
+logfile        ~/.msmtp.log
+port 587
+tls on
+
+account irisa
+host smtp.inria.fr # hostname for your smtp server
+from barais@irisa.fr # from address when sending
+auth on
+user barais # user 
+passwordeval   "gpg2 -q --for-your-eyes-only --no-tty -d ~/mail/zimbra.inria.fr.gpg" # Created in step 1
+
+account default : irisa</code></pre>
+                </div>
+                <div class="code-container fr">
+<pre><code>defaults
+logfile        ~/.msmtp.log
+port 587
+tls on
+
+account irisa
+host smtp.inria.fr # hostname du serveur smtp
+from barais@irisa.fr # email d'expéditeur
+auth on
+user barais # utilisateur 
+passwordeval   "gpg2 -q --for-your-eyes-only --no-tty -d ~/mail/zimbra.inria.fr.gpg" # Création du fichier voir step 1
+
+account default : irisa</code></pre>
+                </div>
+
+
+                <h3>5. notmuch setup</h3>
+                <p class="en">Initialize the database by simply running:</p>
+                <p class="fr">Initialisez la base de données en exécutant simplement :</p>
+                <div class="code-container">
+                    <pre><code>notmuch setup</code></pre>
+                </div>
+                <p class="en">Answer the prompts (name, address, and the path to <code>~/.mail</code>).</p>
+                <p class="fr">Répondez aux questions (nom, adresse, et le chemin vers <code>~/.mail</code>).</p>
+
+                <h3>6. ~/.config/afew/config</h3>
+                <div class="code-container">
+<pre><code>[SpamFilter]
+[KillThreadsFilter]
+[ListMailsFilter]
+[ArchiveSentMailsFilter]
+[InboxFilter]</code></pre>
+                </div>
+
+            </section>
+
+            <!-- Partie 5 — LanguageTool -->
+            <section id="languagetool">
+                <h2>LanguageTool 📝 
+                    <span class="badge rec en">Recommended</span>
+                    <span class="badge rec fr">Recommandé</span>
+                </h2>
+                <p class="en">For advanced grammar and spell checking without sending your data to a third-party service.</p>
+                <p class="fr">Pour la correction grammaticale et orthographique avancée sans envoyer vos données à un service tiers.</p>
+                
+                <p class="en">Create a <code>docker-compose.yml</code> file:</p>
+                <p class="fr">Créez un fichier <code>docker-compose.yml</code> :</p>
+                <div class="code-container">
+<pre><code>services:
+  languagetool:
+    image: silviof/docker-languagetool
+    ports:
+      - "8081:8010"
+    restart: always</code></pre>
+                </div>
+
+                <p class="en">Run the container in the background:</p>
+                <p class="fr">Lancez le conteneur en arrière-plan :</p>
+                <div class="code-container">
+                    <pre><code>docker compose up -d</code></pre>
+                </div>
+
+                <p class="en">Check that the API is working:</p>
+                <p class="fr">Vérifiez que l'API fonctionne :</p>
+                <div class="code-container">
+                    <pre><code>curl localhost:8081/v2/languages</code></pre>
+                </div>
+            </section>
+
+            <!-- Partie 6 — config.json -->
+            <section id="config-json">
+                <h2>
+                    <span class="en">The config.json file 🔧</span>
+                    <span class="fr">Le fichier config.json 🔧</span>
+                </h2>
+                <p class="en">This file tells Notmuch Tauri how to interact with your CLI tools. It is located in the Tauri config folder (e.g., <code>~/.config/notmuchtauri/config.json</code>).</p>
+                <p class="fr">Ce fichier indique à Notmuch Tauri comment interagir avec vos outils CLI. Il est situé dans le dossier de configuration Tauri (ex: <code>~/.config/notmuchtauri/config.json</code>).</p>
+
+                <div class="code-container en">
+<pre><code>{
+  "limit": 200,
+  "accounts": [],
+  "default_sent_folder": "Sent",
+  "rmtmmail": "mail@change.fr",
+  "lthostport": "http://localhost:8081",
+  "calendaremail": "mail1@change.fr",
+  "llm": {
+    "api_url": "https://ragarenn.eskemm-numerique.fr/sso/ch@t/api/chat/completions",
+    "api_key": "TO Change",
+    "model": "ilaas/gemma-4-31b"
+  },
+  "shortcuts": [
+    {
+      "shortcut": "\\sumup",
+      "text": "Can you summarize this email thread"
+    },
+    {
+      "shortcut": "\\replyyes",
+      "text": "Can you draft a favorable reply"
+    },
+    {
+      "shortcut": "\\replyno",
+      "text": "Can you draft an unfavorable reply"
+    }
+  ]
+}</code></pre>
+                </div>
+                
+                <div class="code-container fr">
+<pre><code>{
+  "limit": 200,
+  "accounts": [],
+  "default_sent_folder": "Sent",
+  "rmtmmail": "mail@change.fr",
+  "lthostport": "http://localhost:8081",
+  "calendaremail": "mail1@change.fr",
+  "llm": {
+    "api_url": "https://ragarenn.eskemm-numerique.fr/sso/ch@t/api/chat/completions",
+    "api_key": "TO Change",
+    "model": "ilaas/gemma-4-31b"
+  },
+  "shortcuts": [
+    {
+      "shortcut": "\\sumup",
+      "text": "Peux tu me résumer ce thread de mail"
+    },
+    {
+      "shortcut": "\\replyyes",
+      "text": "Peux tu proposer une réponse favorable"
+    },
+    {
+      "shortcut": "\\replyno",
+      "text": "Peux tu proposer une réponse défavorable"
+    }
+  ]
+}</code></pre>
+                </div>
+
+                <div class="card" style="padding: 0; overflow-x: auto;">
+                    <table style="margin: 0; border: none;">
+                        <thead>
+                            <tr>
+                                <th class="en">Field</th>
+                                <th class="fr">Champ</th>
+                                <th>Description</th>
+                                <th class="en">Default</th>
+                                <th class="fr">Défaut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>root_mail_dir</code></td>
+                                <td>
+                                    <span class="en">Path to files where emails are stored locally</span>
+                                    <span class="fr">Path des fichiers où sont stockés les mails localement</span>
+                                    <span class="badge opt en">Derived</span>
+                                    <span class="badge opt fr">Dérivé</span>
+                                </td>
+                                <td><span class="en">Computed from</span><span class="fr">Calculé via</span> <code>notmuch_config_path</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>mbsyncrc_path</code></td>
+                                <td>
+                                    <span class="en">Default path for the mbsync configuration file</span>
+                                    <span class="fr">Path par défaut pour le fichier de configuration mbsync</span>
+                                    <span class="badge opt en">Optional</span>
+                                    <span class="badge opt fr">Optionnel</span>
+                                </td>
+                                <td><code>~/.mbsyncrc</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>msmtprc_path</code></td>
+                                <td>
+                                    <span class="en">Default path for the msmtp configuration file</span>
+                                    <span class="fr">Path par défaut pour le fichier de configuration msmtp</span>
+                                    <span class="badge opt en">Optional</span>
+                                    <span class="badge opt fr">Optionnel</span>
+                                </td>
+                                <td><code>~/.msmtprc</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>notmuch_config_path</code></td>
+                                <td>
+                                    <span class="en">Default path for the notmuch configuration file</span>
+                                    <span class="fr">Path par défaut pour le fichier de configuration notmuch</span>
+                                    <span class="badge opt en">Optional</span>
+                                    <span class="badge opt fr">Optionnel</span>
+                                </td>
+                                <td><code>~/.notmuch-config</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>maildir_stores</code></td>
+                                <td>
+                                    <span class="en">Configuration of local email storage paths</span>
+                                    <span class="fr">Configuration des path de stockage local des mails</span>
+                                    <span class="badge opt en">Derived</span>
+                                    <span class="badge opt fr">Dérivé</span>
+                                </td>
+                                <td><span class="en">Computed from</span><span class="fr">Calculé via</span> <code>mbsyncrc_path</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>accounts</code></td>
+                                <td>
+                                    <span class="en">List of accounts, loaded automatically from the mbsyncrc config file</span>
+                                    <span class="fr">Liste des comptes, cette partie est chargée automatiquement depuis le fichier de configuration de mbsyncrc</span>
+                                    <span class="badge opt en">Optional</span>
+                                    <span class="badge opt fr">Optionnel</span>
+                                </td>
+                                <td><span class="en">Computed from</span><span class="fr">Calculé via</span> <code>msmtp_path</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>default_sent_folder</code></td>
+                                <td>
+                                    <span class="en">Folder to use for sent emails</span>
+                                    <span class="fr">Dossier à utiliser pour les mails envoyés</span>
+                                </td>
+                                <td>Sent</td>
+                            </tr>
+                            <tr>
+                                <td><code>lthostport</code></td>
+                                <td>
+                                    <span class="en">LanguageTool API URL (e.g., local Docker server).</span>
+                                    <span class="fr">URL de l'API LanguageTool (ex: serveur Docker local).</span>
+                                    <span class="badge opt en">Optional</span>
+                                    <span class="badge opt fr">Optionnel</span>
+                                </td>
+                                <td>None</td>
+                            </tr>
+                            <tr>
+                                <td><code>calendaremail</code></td>
+                                <td>
+                                    <span class="en">Destination email for calendar events when sending to a single recipient</span>
+                                    <span class="fr">Email de destination pour l'agenda quand envoi à un unique destinataire</span>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><code>rmtmmail</code></td>
+                                <td>
+                                    <span class="en">Email to send to Remember The Milk</span>
+                                    <span class="fr">Mail pour envoyer vers Remember The Milk</span>
+                                    <span class="badge opt en">Optional</span>
+                                    <span class="badge opt fr">Optionnel</span>
+                                </td>
+                                <td>None</td>
+                            </tr>
+                            <tr>
+                                <td><code>llm</code></td>
+                                <td>
+                                    <span class="en">LLM endpoint (OpenAI, or a local Ollama server!), Your API key for AI writing, and the model to use</span>
+                                    <span class="fr">Point d'accès LLM (OpenAI, ou un serveur Ollama local !), Votre clé API pour la rédaction assistée, modèle à utiliser</span>
+                                    <span class="badge opt en">Optional</span>
+                                    <span class="badge opt fr">Optionnel</span>
+                                </td>
+                                <td>None</td>
+                            </tr>
+                            <tr>
+                                <td><code>shortcuts</code></td>
+                                <td>
+                                    <span class="en">Shortcuts for the LLM prompts</span>
+                                    <span class="fr">Raccourci pour la partie LLM (commande)</span>
+                                    <span class="badge opt en">Optional</span>
+                                    <span class="badge opt fr">Optionnel</span>
+                                </td>
+                                <td>None</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Partie 7 — Workflow -->
+            <section id="workflow">
+                <h2>Workflow 🔄</h2>
+                
+                <div class="callout warning">
+                    <p class="en">⚡ <strong>Quick Start:</strong> If you want to fetch your emails manually in the terminal:</p>
+                    <p class="fr">⚡ <strong>Quick Start :</strong> Si vous voulez récupérer vos e-mails manuellement dans le terminal :</p>
+                    <div class="code-container" style="margin-top: 1rem; margin-bottom: 0;">
+<pre><code>sem --fg -j 1 --id mbsync  '/usr/bin/mbsync -a' ; sem -j 1 --fg --id notmuch '/usr/bin/notmuch new --quiet'</code></pre>
+                    </div>
+                </div>
+                <div class="callout warning">
+                    <p class="en">⚡ <strong>Quick Start:</strong> If you want to put this script in your crontab:</p>
+                    <p class="fr">⚡ <strong>Quick Start :</strong> Si vous voulez mettre ce script dans votre crontab :</p>
+                    <div class="code-container" style="margin-top: 1rem; margin-bottom: 0;">
+<pre><code>*/2 * * * *   sem --fg -j 1 --id mbsync  '/usr/bin/mbsync -a' ; sem -j 1 --fg --id notmuch '/usr/bin/notmuch new --quiet'</code></pre>
+                    </div>
+                </div>
+
+                <p class="en">Here is the lifecycle of an email in the ecosystem:</p>
+                <p class="fr">Voici le flux de vie d'un e-mail dans l'écosystème :</p>
+
+                <div class="card" style="text-align: center;">
+                    <div class="workflow-step"><code>mbsync -a</code> <span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;"><span class="en">(Downloads emails)</span><span class="fr">(Télécharge les e-mails)</span></span></div>
+                    <div class="workflow-arrow">↓</div>
+                    <div class="workflow-step"><code>notmuch new</code> <span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;"><span class="en">(Indexes emails)</span><span class="fr">(Indexe les e-mails)</span></span></div>
+                    <div class="workflow-arrow">↓</div>
+                    <div class="workflow-step"><code>afew --tag --new</code> <span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;"><span class="en">(Applies smart tags)</span><span class="fr">(Applique les tags intelligents)</span></span></div>
+                    <div class="workflow-arrow">↓</div>
+                    <div class="workflow-step" style="color: var(--primary-color);"><strong>Open Notmuch Tauri</strong> <span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;"><span class="en">(Reading and searching)</span><span class="fr">(Lecture et recherche)</span></span></div>
+                    <div class="workflow-arrow">↓</div>
+                    <div class="workflow-step">Compose <span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;"><span class="en">(Writing a reply)</span><span class="fr">(Rédaction d'une réponse)</span></span></div>
+                    <div class="workflow-arrow">↓</div>
+                    <div class="workflow-step">LanguageTool / LLM <span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;"><span class="en">(Proofreading and assistance)</span><span class="fr">(Correction et assistance)</span></span></div>
+                    <div class="workflow-arrow">↓</div>
+                    <div class="workflow-step"><code>msmtp</code> <span style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;"><span class="en">(Sending over the network)</span><span class="fr">(Envoi sur le réseau)</span></span></div>
+                </div>
+            </section>
+
+            <!-- Partie 8 — FAQ -->
+            <section id="faq">
+                <h2>FAQ ❓</h2>
+                
+                <details>
+                    <summary>
+                        <span class="en">Why use mbsync?</span>
+                        <span class="fr">Pourquoi utiliser mbsync ?</span>
+                    </summary>
+                    <p class="en">Unlike traditional email clients, mbsync fetches all your emails locally (Maildir). This allows instant indexing with notmuch and 100% offline availability.</p>
+                    <p class="fr">Contrairement aux clients e-mails traditionnels, mbsync rapatrie tous vos e-mails localement (Maildir). Cela permet une indexation instantanée avec notmuch et une disponibilité 100% hors-ligne.</p>
+                </details>
+                
+                <details>
+                    <summary>
+                        <span class="en">Why not direct IMAP?</span>
+                        <span class="fr">Pourquoi pas IMAP directement ?</span>
+                    </summary>
+                    <p class="en">IMAP is slow for searching. Notmuch can search through millions of emails in milliseconds because everything is indexed on your SSD.</p>
+                    <p class="fr">IMAP est lent pour la recherche. Notmuch peut chercher à travers des millions d'e-mails en quelques millisecondes car tout est indexé sur votre disque SSD.</p>
+                </details>
+                
+                <details>
+                    <summary>
+                        <span class="en">How to sync automatically?</span>
+                        <span class="fr">Comment synchroniser automatiquement ?</span>
+                    </summary>
+                    <p class="en">You can use a <code>systemd</code> timer, a <code>cron job</code>, or a tool like <code>goimapnotify</code> to trigger the Quick Start upon each new email received on the server.</p>
+                    <p class="fr">Vous pouvez utiliser un timer <code>systemd</code>, un <code>cron job</code>, ou un outil comme <code>goimapnotify</code> pour déclencher le Quick Start à chaque nouvel e-mail reçu sur le serveur.</p>
+                </details>
+
+                <details>
+                    <summary>
+                        <span class="en">Can I use multiple accounts?</span>
+                        <span class="fr">Puis-je utiliser plusieurs comptes ?</span>
+                    </summary>
+                    <p class="en">Yes! Just add multiple <code>Account</code> sections in your <code>.mbsyncrc</code> and <code>.msmtp/config</code> files. Notmuch will group everything under a single unified search interface.</p>
+                    <p class="fr">Oui ! Il suffit d'ajouter plusieurs sections <code>Account</code> dans vos fichiers <code>.mbsyncrc</code> et <code>.msmtp/config</code>. Notmuch regroupera le tout sous une seule interface de recherche unifiée.</p>
+                </details>
+
+                <details>
+                    <summary>
+                        <span class="en">How to use my own LLM?</span>
+                        <span class="fr">Comment utiliser mon propre LLM ?</span>
+                    </summary>
+                    <p class="en">Simply replace <code>llm_endpoint</code> in <code>config.json</code> with the URL of your local Ollama instance (e.g., <code>http://localhost:11434/v1/chat/completions</code>) and put a dummy API key.</p>
+                    <p class="fr">Remplacez simplement <code>llm_endpoint</code> dans <code>config.json</code> par l'URL de votre instance Ollama locale (ex: <code>http://localhost:11434/v1/chat/completions</code>) et mettez une clé API factice.</p>
+                </details>
+
+                <details>
+                    <summary>
+                        <span class="en">Is LanguageTool mandatory?</span>
+                        <span class="fr">LanguageTool est-il obligatoire ?</span>
+                    </summary>
+                    <p class="en">No. It's an optional feature. If you leave the <code>languagetool_url</code> field empty, the interface will simply hide the grammar correction button.</p>
+                    <p class="fr">Non. C'est une fonctionnalité optionnelle. Si vous laissez le champ <code>languagetool_url</code> vide, l'interface masquera simplement le bouton de correction grammaticale.</p>
+                </details>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p class="en">© 2026 Notmuch Tauri. Documentation generated without JS framework. Fast, lightweight, and privacy-respecting.</p>
+        <p class="fr">© 2026 Notmuch Tauri. Documentation générée sans framework JS. Rapide, léger, et respectueux de la vie privée.</p>
+    </footer>
+
+    <!-- Bouton Retour en haut -->
+    <button id="backToTop" aria-label="Retour en haut">🔝</button>
+
+    <!-- Script Javascript Natif -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Gestion du multilinguisme
+        const langSwitch = document.getElementById('lang-switch');
+
+        function setLanguage(lang) {
+             console.error(lang)
+             if (lang === 'fr') {
+
+                    document.body.classList.replace('lang-en', 'lang-fr');
+             }else {
+                    document.body.classList.replace('lang-fr', 'lang-en');
+
+             }
+            document.documentElement.lang = lang;
+        }
+
+        langSwitch.addEventListener('change', (e) => {
+            setLanguage(e.target.value);
+        });
+
+        // Initialize with default language (English)
+        setLanguage('en');
+
+
+            
+
+            // Création des boutons "Copy" dynamiquement
+            document.querySelectorAll('.code-container').forEach((container) => {
+                const btn = document.createElement('button');
+                btn.className = 'copy-btn';
+                btn.innerText = 'Copy';
+                
+                btn.addEventListener('click', () => {
+                    const code = container.querySelector('code').innerText;
+                    navigator.clipboard.writeText(code).then(() => {
+                        btn.innerText = 'Copied! ✅';
+                        btn.style.color = '#4ade80';
+                        setTimeout(() => {
+                            btn.innerText = 'Copy';
+                            btn.style.color = '';
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('Failed to copy', err);
+                    });
+                });
+                
+                container.appendChild(btn);
+            });
+
+            // Bouton "Retour en Haut"
+            const btt = document.getElementById('backToTop');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    btt.classList.add('visible');
+                } else {
+                    btt.classList.remove('visible');
+                }
+            });
+
+            btt.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

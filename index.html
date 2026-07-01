@@ -38,7 +38,12 @@
                     <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                     <span class="font-bold text-xl tracking-tight">NotmuchTauri</span>
                 </div>
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-4 sm:space-x-6">
+                    <!-- Lien vers install.html -->
+                    <a href="install.html" class="hidden sm:block text-sm font-semibold text-gray-600 hover:text-primary transition-colors" data-i18n="nav_install">
+                        Installation & Guide
+                    </a>
+                    
                     <select id="lang-switch" class="bg-gray-100 border-none text-sm rounded-md py-1 px-2 focus:ring-primary cursor-pointer outline-none">
                         <option value="en">🇬🇧 EN</option>
                         <option value="fr">🇫🇷 FR</option>
@@ -60,24 +65,19 @@
         <p class="mt-4 text-xl text-gray-500 max-w-3xl mx-auto" data-i18n="hero_desc">
             An experimental, blazing-fast email client coordinating the best open-source CLI tools under a modern Tauri & Vue.js interface. Powered by Agentic AI.
         </p>
-        <div class="mt-10 flex justify-center gap-4">
+        <div class="mt-10 flex flex-wrap justify-center gap-4">
             <a href="https://github.com/notmuchtauri/notmuchtauri/releases" target="_blank" class="px-8 py-3 bg-primary text-white font-semibold rounded-lg shadow-lg hover:bg-indigo-700 transition transform hover:-translate-y-1">
                 <span data-i18n="btn_download">Download Release</span>
+            </a>
+            <!-- Bouton vers install.html -->
+            <a href="install.html" class="px-8 py-3 bg-white text-primary font-semibold rounded-lg shadow-md border border-gray-200 hover:bg-gray-50 transition transform hover:-translate-y-1">
+                <span data-i18n="btn_install">Installation Guide</span>
             </a>
             <a href="https://github.com/notmuchtauri/notmuchtauri" target="_blank" class="px-8 py-3 bg-white text-gray-900 font-semibold rounded-lg shadow-md border border-gray-200 hover:bg-gray-50 transition transform hover:-translate-y-1">
                 <span data-i18n="btn_github">View on GitHub</span>
             </a>
         </div>
     </section>
-
-    <!-- Video Section (Commented out for now) -->
-    <!--
-    <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div class="aspect-w-16 aspect-h-9 rounded-2xl overflow-hidden shadow-2xl bg-gray-900">
-            <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full object-cover"></iframe>
-        </div>
-    </section>
-    -->
 
     <!-- Pillars Section -->
     <section class="py-20 bg-white border-y border-gray-200">
@@ -119,7 +119,7 @@
             <div>
                 <h2 class="text-3xl font-bold mb-4" data-i18n="claude_title">Coding with Agentic AI: The Claude Code Experience</h2>
                 <p class="text-gray-300 mb-6 leading-relaxed" data-i18n="claude_desc_1">
-                    One of the most fun aspects of this project was the development approach. To refine the specs and structure complex Vue.js components (like recursive reply trees or placing overlays on text), I experimented with direct exchanges with Claude.
+                    One of the most fun aspects of this project was the development approach. To refine the specs and structure complex Vue.js components (like recursive reply trees or placing overlays on text), I experimented with direct exchanges with Claude cli through 9router to RagaRenn/Gemma4.
                 </p>
                 <p class="text-gray-300 mb-6 leading-relaxed" data-i18n="claude_desc_2">
                     This "Specification-Driven Development" approach assisted by AI proved to be incredibly effective.
@@ -135,7 +135,7 @@
                 </div>
                 <h3 class="text-2xl font-bold mb-4 text-white" data-i18n="copilot_title">RagaRennes: AI directly in your inbox</h3>
                 <p class="text-gray-400 mb-4" data-i18n="copilot_intro">
-                    As a computer scientist in 2026, I couldn't build a mail client without integrating AI to save time! I embedded RagaRennes (or any OpenAI-compatible API) as a collapsible side copilot.
+                    As a computer scientist, I couldn't build a mail client without integrating AI to save time! I embedded RagaRennes (or any OpenAI-compatible API) as a collapsible side copilot.
                 </p>
                 <ul class="space-y-4">
                     <li class="flex items-start">
@@ -200,10 +200,12 @@
     <script>
         const translations = {
             en: {
+                nav_install: "Installation & Guide",
                 hero_title_1: "The UNIX Philosophy",
                 hero_title_2: "meets Modern UI.",
                 hero_desc: "An experimental, blazing-fast email client coordinating the best open-source CLI tools under a modern Tauri & Vue.js interface. Powered by Agentic AI.",
                 btn_download: "Download Release",
+                btn_install: "Installation Guide",
                 btn_github: "View on GitHub",
                 pillars_title: "Standing on the Shoulders of Giants",
                 pillars_desc: "Rather than reinventing the wheel and managing IMAP/SMTP protocols directly in Rust or JavaScript, NotmuchTauri acts as an orchestrator for four open-source pillars.",
@@ -233,10 +235,12 @@
                 footer_desc: "It's experimental, open-source, and made to be hacked. Feel free to test it, read the code, or submit PRs!"
             },
             fr: {
+                nav_install: "Installation & Guide",
                 hero_title_1: "La philosophie UNIX",
                 hero_title_2: "rencontre les interfaces modernes.",
                 hero_desc: "Un client mail expérimental ultra-rapide qui coordonne les meilleurs outils CLI open source sous une interface moderne Tauri & Vue.js. Dopé à l'IA Agentique.",
                 btn_download: "Télécharger (Release)",
+                btn_install: "Guide d'installation",
                 btn_github: "Voir sur GitHub",
                 pillars_title: "Sur les épaules de géants",
                 pillars_desc: "Plutôt que de réinventer la roue et de devoir gérer les protocoles IMAP et SMTP directement en Rust ou JS, NotmuchTauri délègue la gestion des flux à des pointures du monde open source.",
