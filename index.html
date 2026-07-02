@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NotmuchTauri - The Modern UNIX Mail Client</title>
+    <title>NotmuchTauri - The Modern Linux Mail Client</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -59,7 +59,7 @@
     <!-- Hero Section -->
     <section class="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
         <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight mb-6">
-            <span data-i18n="hero_title_1">The UNIX Philosophy</span> <br/>
+            <span data-i18n="hero_title_1">The Linux Philosophy</span> <br/>
             <span class="gradient-text" data-i18n="hero_title_2">meets Modern UI.</span>
         </h1>
         <p class="mt-4 text-xl text-gray-500 max-w-3xl mx-auto" data-i18n="hero_desc">
@@ -147,7 +147,6 @@
                         <span class="text-gray-300"><strong class="text-white" data-i18n="copilot_f2_bold">Draft replies:</strong> <span data-i18n="copilot_f2_text">Give it a few keywords ("Tell him the quote is validated and we start Monday"), and the AI generates the formatted Markdown text. One click injects it cleanly into the Tiptap editor.</span></span>
                     </li>
                 </ul>
-                <p class="mt-6 text-sm text-gray-500 italic" data-i18n="copilot_joke">(You can probably guess how this text was written 😉)</p>
             </div>
         </div>
     </section>
@@ -156,7 +155,24 @@
     <section class="py-20 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="text-3xl font-bold text-gray-900 mb-12" data-i18n="prod_title">Built for Productivity</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                    <div class="w-12 h-12 bg-red-100 text-yellow-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Rounded Square -->
+  <rect width="24" height="24" rx="6" fill="#4f46e5" />
+  <!-- Envelope Shape -->
+  <path d="M4 7L12 11L20 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M4 7V17H20V7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- AI Spark/Speed Line -->
+  <path d="M12 11L15 15" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" />
+  <circle cx="16" cy="16" r="1.5" fill="#8b5cf6" />
+</svg>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2" data-i18n="prod_4_title">Intelligence, integrated</h3>
+                    <p class="text-gray-600 text-sm" data-i18n="prod_4_desc">Experience a seamless blend of Agentic AI. Summarize, draft, and organize your communication with a sovereign intelligent copilot by your side.</p>
+                </div>
+
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
                     <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
@@ -201,7 +217,7 @@
         const translations = {
             en: {
                 nav_install: "Installation & Guide",
-                hero_title_1: "The UNIX Philosophy",
+                hero_title_1: "The Linux Philosophy",
                 hero_title_2: "meets Modern UI.",
                 hero_desc: "An experimental, blazing-fast email client coordinating the best open-source CLI tools under a modern Tauri & Vue.js interface. Powered by Agentic AI.",
                 btn_download: "Download Release",
@@ -231,12 +247,14 @@
                 prod_2_desc: "Easily generate and send .ics meeting invitations based on email threads.",
                 prod_3_title: "Auto-completion Shortcuts",
                 prod_3_desc: "Define text snippets and trigger them instantly with Ctrl+Space while typing.",
+                prod_4_title: "Intelligence, integrated",
+                prod_4_desc: "Experience a seamless blend of Agentic AI. Summarize, draft, and organize your communication with a sovereign intelligent copilot by your side.",
                 footer_title: "Want to give it a try?",
                 footer_desc: "It's experimental, open-source, and made to be hacked. Feel free to test it, read the code, or submit PRs!"
             },
             fr: {
                 nav_install: "Installation & Guide",
-                hero_title_1: "La philosophie UNIX",
+                hero_title_1: "La philosophie Linux",
                 hero_title_2: "rencontre les interfaces modernes.",
                 hero_desc: "Un client mail expérimental ultra-rapide qui coordonne les meilleurs outils CLI open source sous une interface moderne Tauri & Vue.js. Dopé à l'IA Agentique.",
                 btn_download: "Télécharger (Release)",
@@ -266,6 +284,8 @@
                 prod_2_desc: "Générez et envoyez facilement des invitations de réunion .ics depuis vos e-mails.",
                 prod_3_title: "Raccourcis d'auto-complétion",
                 prod_3_desc: "Définissez des extraits de texte et déclenchez-les instantanément avec Ctrl+Espace en tapant.",
+                prod_4_title: "Intelligence intégrée",
+                prod_4_desc: "Découvrez une intégration d'un agent IA au coeur de vos mails. Résumez, rédigez et organisez vos communications grâce à un copilote intelligent et autonome à vos côtés.",
                 footer_title: "Envie d'essayer ?",
                 footer_desc: "C'est expérimental, c'est open source, et c'est fait pour être bidouillé. N'hésitez pas à venir tester, lire le code ou proposer des PR !"
             }
